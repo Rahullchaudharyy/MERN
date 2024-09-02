@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import user from '../models/User.js'
+import User from '../models/User.js'
 import asyncHandler from './asyncHandler.js'
 import dotenv from 'dotenv';
 dotenv.config(); // Load environment variables from .env file
@@ -14,12 +14,12 @@ const authenticated = asyncHandler(async (req, res, next) => {
 
     // reat the jwt from the 'jwt'  cookie
 
-    token.req.cookies.jwt
+    token = req.cookies.jwt;
 
     if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECTRET);
-            req.user = await user.findById(decoded.userId).select('-password')
+            req.user = await User.findById(decoded.userId).select('-password')
             next()
 
 
@@ -51,3 +51,4 @@ const Authorized = (req,res,next) =>{
 
 
 export {authenticated,Authorized}
+
