@@ -3,75 +3,69 @@ import bcrypt from 'bcryptjs';
 import asyncHandler from "../middlewares/asyncHandler.js";
 import CreateToken from '../utils/CreateToken.js'
 const CreateUser = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+   const { username, email, password } = req.body;
 
-  // Validate the input
-  if (!username || !email || !password) {
-    console.log("Validation failed: missing input fields.");
-    return res.status(400).json({ message: 'Please fill all the fields!' });
-  }
+   if (!username || !email || !password) {
+       console.log("Validation failed: missing input fields.");
+       return res.status(400).json({ message: 'Please fill all the fields!' });
+   }
 
-  // Check if the user already exists
-  const userExists = await User.findOne({ email });
+   const userExists = await User.findOne({ email });
 
-  if (userExists) {
-    console.log("User already exists.");
-     res.status(400).json({ message: 'User already exists' });
-  }
+   if (userExists) {
+       console.log("User already exists.");
+       return res.status(400).json({ message: 'User already exists' });
+   }
 
-  // Hash the user's password
-  const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash(password, salt);
+   const salt = await bcrypt.genSalt(10);
+   const hashPassword = await bcrypt.hash(password, salt);
 
-  const newUser = new User({ username, email, password: hashPassword });
+   const newUser = new User({ username, email, password: hashPassword });
 
-  try {
-   await newUser.save();
-   CreateToken(res, newUser._id);
+   try {
+       await newUser.save();
+       CreateToken(res, newUser._id);
 
-    res.status(201).json({
-     _id: newUser._id,
-     username: newUser.username,
-     email: newUser.email,
-     isAdmin: newUser.isAdmin,
-   });
-} catch (error) {
-
-   res.status(400)
-      throw new Error('Invalid user Data')
-}
-
+       res.status(201).json({
+           _id: newUser._id,
+           username: newUser.username,
+           email: newUser.email,
+           isAdmin: newUser.isAdmin,
+       });
+   } catch (error) {
+       res.status(400);
+       throw new Error('Invalid user Data');
+   }
 });
+
 const LogInUser = asyncHandler(async(req,res)=>{
    const {email,password}=req.body
 
-
    const ExistingUser = await User.findOne({email})
-   console.log(ExistingUser)
-   // console.log(password)
-   if (userExists) {
+
+   if (ExistingUser) {
       const PasswordValid = await bcrypt.compare(password,ExistingUser.password)
 
       if(PasswordValid){
-      CreateToken(res,ExistingUser._id)
+         CreateToken(res,ExistingUser._id)
 
-      res.status(201).json({
-         _id: ExistingUser._id,
-         username: ExistingUser.username,
-         email: ExistingUser.email,
-         isAdmin: ExistingUser.isAdmin,
-       });
+         res.status(201).json({
+            _id: ExistingUser._id,
+            username: ExistingUser.username,
+            email: ExistingUser.email,
+            isAdmin: ExistingUser.isAdmin,
+         });
 
-
-      }else{
+      } else {
          res.status(401).json({message:"Invalid password"})
       }
-      
-   } else{
+
+   } else {
       res.status(401).json({message:"User Not found"})
    }
 
 });
+
 
 const LogOutCurrentUser = asyncHandler(async(req,res)=>{
    req.cookie('jwt','',{

@@ -8,34 +8,22 @@ dotenv.config(); // Load environment variables from .env file
 
 
 const authenticated = asyncHandler(async (req, res, next) => {
-
-    let token;
-
-
-    // reat the jwt from the 'jwt'  cookie
-
-    token = req.cookies.jwt;
+    let token = req.cookies.jwt;
 
     if (token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECTRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.userId).select('-password')
             next()
-
-
         } catch (error) {
-            res.status(401)
-            throw new Error('Not Authorized,token failed')
-
+            res.status(401);
+            throw new Error('Not Authorized, token failed');
         }
     } else {
-
-        res.status(401)
-
-        throw new Error('Not Authorized or Failed To login')
+        res.status(401);
+        throw new Error('Not Authorized or Failed To login');
     }
-})
-
+});
 
 // Cheak User is Admin or not . 
 const Authorized = (req,res,next) =>{
@@ -51,4 +39,3 @@ const Authorized = (req,res,next) =>{
 
 
 export {authenticated,Authorized}
-
