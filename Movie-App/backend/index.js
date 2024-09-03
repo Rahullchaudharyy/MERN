@@ -1,17 +1,17 @@
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
-import path from 'path';
+// Packages
+import express from "express";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import path from "path";
 
 
 // Filesle
 
 import connectDB from './config/db.js'
 
-import UserRoutes from './routes/UserRoutes.js'
+import UserRoutes from './routes/userRoutes.js'
 
-dotenv.config()
-
+dotenv.config();
 connectDB()
 
 const app = express()
