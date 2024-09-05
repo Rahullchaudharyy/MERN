@@ -4,14 +4,28 @@ import { Provider } from "react-redux";
 import { Route, RouterProvider, createRoutesFromElements } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
+import Home from './pages/Home.jsx'
+import Ragister from './pages/Auth/Register.jsx'
+import Login from './pages/Auth/Login.jsx'
+
+
 import "./index.css";
+
 
 // auth
 
 // ristricted user
 
 const route = createBrowserRouter(
-  createRoutesFromElements(<Route path="/" element={<App />}></Route>)
+  createRoutesFromElements(<Route path="/" element={<App />}>
+
+<Route index={true}   path="/" element={<Home/>}/>
+<Route index={true}   path="/register" element={<Ragister/>}/>
+<Route index={true}   path="/login" element={<Login/>}/>
+  </Route>
+  
+
+  )
 );
 
 createRoot(document.getElementById("root")).render(
