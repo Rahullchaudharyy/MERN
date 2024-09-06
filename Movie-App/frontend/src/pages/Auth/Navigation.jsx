@@ -5,9 +5,10 @@ import { AiOutlineHome, AiOutlineLogin, AiOutlineUserAdd } from 'react-icons/ai'
 import { MdOutlineLocalMovies } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLoginMutation } from '../../redux/api/users';
+import { useLogoutMutation } from '../../redux/api/users';
 import { logout } from '../../redux/features/auth/authSlice';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -15,16 +16,27 @@ const Navigation = () => {
 
   const ToggleDropDown = () => {
     setDropDownOpen(!dropDownOpen);
+    console.log('button Clicked')
   };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [logoutApiCall] = useLoginMutation();
+  const [logoutApiCall] = useLogoutMutation();
 
-  const menuItems = [
-    { name: "Home", href: "/" },
-    { name: "Movies", href: "/movies" },
-  ];
+  const LogoutHandler = async ()=>{
+    try {
+      await logoutApiCall().unwrap()
+      dispatch(logout())
+      navigate('/login')
+      
+    } catch (error) {
+      console.log(error)
+      toast.error(error)
+      
+    }
+  }
+
+
 
   return (
 
@@ -54,8 +66,10 @@ const Navigation = () => {
       {/* Section 2 */}
       <div className="relative flex justify-center items-center">
         <button
-          onClick={ToggleDropDown}
-          className="text-white focus:outline-none"
+          onClick={()=>{
+            ToggleDropDown()
+          }}
+          className="text-white bg-red-600 focus:outline-none"
         >
           {userInfo && (
             <span className="text-white">{userInfo.username}</span>
@@ -107,6 +121,7 @@ const Navigation = () => {
 
             <li>
               <button
+              onClick={LogoutHandler}
                 className="block w-full px-4 py-2 text-left hover:bg-gray-100"
               >
                 Logout
@@ -149,3 +164,5 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
+

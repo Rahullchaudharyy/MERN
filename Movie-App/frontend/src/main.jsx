@@ -20,8 +20,8 @@ const route = createBrowserRouter(
   createRoutesFromElements(<Route path="/" element={<App />}>
 
 <Route index={true}   path="/" element={<Home/>}/>
-<Route index={true}   path="/register" element={<Ragister/>}/>
-<Route index={true}   path="/login" element={<Login/>}/>
+<Route  path="/register" element={<Ragister/>}/>
+<Route  path="/login" element={<Login/>}/>
   </Route>
   
 
@@ -31,7 +31,7 @@ const route = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <RouterProvider router={route}>
-      <App />
+      <App  />
     </RouterProvider>
   </Provider>
 );
