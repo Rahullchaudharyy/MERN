@@ -3,6 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import path from "path";
+import GenreRoutes from './routes/GenreRoutes.js'
 
 
 // Filesle
@@ -28,6 +29,8 @@ const PORT = process.env.PORT || 3000;
 //routes 
 
 app.use('/api/v1/users',UserRoutes)
+app.use('/api/v1/genre',GenreRoutes)
+
 
 
 app.listen(PORT, () => {
